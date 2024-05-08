@@ -312,6 +312,7 @@ public abstract partial class AbstractGuildedClient
     /// <param name="isMentionable">Whether the <see cref="Role">role</see> can be mentioned and its <see cref="Member">members</see> get pinged</param>
     /// <param name="colors">The new displayed colours of the <see cref="Role">role</see></param>
     /// <param name="permissions">The new <see cref="Permission">permissions</see> of the <see cref="Role">role</see></param>
+    /// <param name="priority">The position of the <see cref="Role">role</see> in the <see cref="Server">server's</see> role list</param>
     /// <exception cref="GuildedException" />
     /// <exception cref="GuildedPermissionException" />
     /// <exception cref="GuildedResourceException" />
@@ -319,7 +320,7 @@ public abstract partial class AbstractGuildedClient
     /// <exception cref="GuildedAuthorizationException" />
     /// <permission cref="Permission.ManageRoles" />
     /// <returns>The <see cref="Role">role</see> that was updated by the <see cref="AbstractGuildedClient">client</see></returns>
-    public Task<Role> UpdateRoleAsync(HashId server, uint role, string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<uint>? colors = null, IList<Permission>? permissions = null)
+    public Task<Role> UpdateRoleAsync(HashId server, uint role, string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<uint>? colors = null, IList<Permission>? permissions = null, int? priority = null)
     {
         return GetResponsePropertyAsync<Role>(new RestRequest($"servers/{server}/roles/{role}", Method.Patch)
             .AddJsonBody(new
@@ -330,11 +331,12 @@ public abstract partial class AbstractGuildedClient
                 isMentionable,
                 colors,
                 permissions,
+                priority,
             })
         , "role");
     }
 
-    /// <inheritdoc cref="UpdateRoleAsync(HashId, uint, string?, bool?, bool?, bool?, IList{uint}?, IList{Permission}?)" />
+    /// <inheritdoc cref="UpdateRoleAsync(HashId, uint, string?, bool?, bool?, bool?, IList{uint}?, IList{Permission}?, int?)" />
     /// <param name="server">The identifier of the <see cref="Server">server</see> where the <see cref="Group">group</see> will be updated</param>
     /// <param name="role">The identifier of the <see cref="Role">role</see> to update</param>
     /// <param name="name">The new name of the <see cref="Role">role</see></param>
@@ -343,7 +345,8 @@ public abstract partial class AbstractGuildedClient
     /// <param name="isMentionable">Whether the <see cref="Role">role</see> can be mentioned and its <see cref="Member">members</see> get pinged</param>
     /// <param name="colors">The new displayed colours of the <see cref="Role">role</see></param>
     /// <param name="permissions">The new <see cref="Permission">permissions</see> of the <see cref="Role">role</see></param>
-    public Task<Role> UpdateRoleAsync(HashId server, uint role, string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<Color>? colors = null, IList<Permission>? permissions = null) =>
+    /// <param name="priority">The position of the <see cref="Role">role</see> in the <see cref="Server">server's</see> role list</param>
+    public Task<Role> UpdateRoleAsync(HashId server, uint role, string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<Color>? colors = null, IList<Permission>? permissions = null, int? priority = null) =>
         UpdateRoleAsync(server, role, name, isDisplayedSeparately, isSelfAssignable, isMentionable, colors?.Select(color => (uint)color.ToArgb()).ToList(), permissions);
 
     /// <summary>
@@ -664,8 +667,8 @@ public abstract partial class AbstractGuildedClient
     /// <permission cref="Permission.ManageXp" />
     /// <returns>The total amount of XP that the <see cref="Member">member</see> has</returns>
     public Task<long> AddXpAsync(HashId server, HashId member, short amount) =>
-        amount is > 1000 or < -1000
-        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1000 and less than -1000 XP")
+        amount is > Member.MaxAddXp or < Member.MinAddXp
+        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1 000 and less than -1 000 XP")
         : GetResponsePropertyAsync<long>(new RestRequest($"servers/{server}/members/{member}/xp", Method.Post)
             .AddJsonBody(new
             {
@@ -674,7 +677,7 @@ public abstract partial class AbstractGuildedClient
         , "total");
 
     /// <summary>
-    /// Gives the specified <paramref name="amount" /> of XP to the <paramref name="memberReference">member reference</paramref>.
+    /// Gives the specified <paramref name="amount" /> of XP to the <paramref name="memberReference">referenced member</paramref>.
     /// </summary>
     /// <param name="server">The server to modify <see cref="Member">member</see> in</param>
     /// <param name="memberReference">A <see cref="UserReference">reference</see> to the receiving <see cref="Member">member</see></param>
@@ -687,8 +690,8 @@ public abstract partial class AbstractGuildedClient
     /// <permission cref="Permission.ManageXp" />
     /// <returns>The total amount of XP that the <see cref="Member">member</see> has</returns>
     public Task<long> AddXpAsync(HashId server, UserReference memberReference, short amount) =>
-        amount is > 1000 or < -1000
-        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1000 and less than -1000 XP")
+        amount is > Member.MaxAddXp or < Member.MinAddXp
+        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1 000 and less than -1 000 XP")
         : GetResponsePropertyAsync<long>(new RestRequest($"servers/{server}/members/@{memberReference.ToString().ToLower()}/xp", Method.Post)
             .AddJsonBody(new
             {
@@ -710,8 +713,8 @@ public abstract partial class AbstractGuildedClient
     /// <permission cref="Permission.ManageXp" />
     /// <returns>The <paramref name="total" /> amount of XP that the <see cref="Member">member</see> has</returns>
     public Task<long> SetXpAsync(HashId server, HashId member, long total) =>
-        total is > 1000 or < -1000
-        ? throw new ArgumentOutOfRangeException(nameof(total), total, "Cannot add more than 1000000000 and less than -1000000000 XP")
+        total is > Member.MaxSetXp or < Member.MinSetXp
+        ? throw new ArgumentOutOfRangeException(nameof(total), total, "Cannot add more than 1 000 000 000 and less than -1 000 000 000 XP")
         : GetResponsePropertyAsync<long>(new RestRequest($"servers/{server}/members/{member}/xp", Method.Put)
             .AddJsonBody(new
             {
@@ -733,8 +736,8 @@ public abstract partial class AbstractGuildedClient
     /// <permission cref="Permission.ManageXp" />
     /// <returns>The <paramref name="total" /> amount of XP that the <see cref="Member">member</see> has</returns>
     public Task<long> SetXpAsync(HashId server, UserReference memberReference, long total) =>
-        total is > 1000 or < -1000
-        ? throw new ArgumentOutOfRangeException(nameof(total), total, "Cannot add more than 1000000000 and less than -1000000000 XP")
+        total is > Member.MaxSetXp or < Member.MinSetXp
+        ? throw new ArgumentOutOfRangeException(nameof(total), total, "Cannot add more than 1 000 000 000 and less than -1 000 000 000 XP")
         : GetResponsePropertyAsync<long>(new RestRequest($"servers/{server}/members/@{memberReference.ToString().ToLower()}/xp", Method.Put)
             .AddJsonBody(new
             {
@@ -743,10 +746,10 @@ public abstract partial class AbstractGuildedClient
         , "total");
 
     /// <summary>
-    /// Gives the specified <paramref name="amount" /> of XP to the specified <paramref name="role">role's</paramref> members.
+    /// Gives the specified <paramref name="amount" /> of XP to the specified <paramref name="role">role's</paramref> <see cref="Member">members</see>.
     /// </summary>
-    /// <param name="server">The server where the role is</param>
-    /// <param name="role">The identifier of the receiving role</param>
+    /// <param name="server">The <see cref="Server">server</see> where the <see cref="Role">role</see> is</param>
+    /// <param name="role">The identifier of the receiving <see cref="Role">role</see></param>
     /// <param name="amount">The amount of XP received (values — <c>[-1000, 1000]</c>)</param>
     /// <exception cref="GuildedException" />
     /// <exception cref="GuildedPermissionException" />
@@ -754,13 +757,61 @@ public abstract partial class AbstractGuildedClient
     /// <exception cref="GuildedAuthorizationException" />
     /// <permission cref="Permission.ManageXp" />
     public Task AddXpAsync(HashId server, uint role, short amount) =>
-        amount is > 1000 or < -1000
-        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1000 and less than -1000 XP")
+        amount is > Member.MaxAddXp or < Member.MinAddXp
+        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1 000 and less than -1 000 XP")
         : ExecuteRequestAsync(new RestRequest($"servers/{server}/roles/{role}/xp", Method.Post)
             .AddJsonBody(new
             {
                 amount
             })
+        );
+
+    /// <summary>
+    /// Gives the specified <paramref name="amount" /> of XP to all of the specified <paramref name="members" />.
+    /// </summary>
+    /// <param name="server">The server where the <see cref="Member">members</see> are</param>
+    /// <param name="amount">The amount of XP received (values — <c>[-1000, 1000]</c>)</param>
+    /// <param name="members">The list of <see cref="Member">members</see> that will be receiving the XP</param>
+    /// <exception cref="GuildedException" />
+    /// <exception cref="GuildedPermissionException" />
+    /// <exception cref="GuildedResourceException" />
+    /// <exception cref="GuildedAuthorizationException" />
+    /// <permission cref="Permission.ManageXp" />
+    /// <returns>The total amount of XP that the each specified <see cref="Member">member</see> has</returns>
+    public Task<IDictionary<HashId, long>> AddBulkXpAsync(HashId server, short amount, params HashId[] members) =>
+        amount is > Member.MaxAddXp or < Member.MinAddXp
+        ? throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot add more than 1 000 and less than -1 000 XP")
+        : GetResponsePropertyAsync<IDictionary<HashId, long>>(new RestRequest($"servers/{server}/xp", Method.Post)
+            .AddJsonBody(new
+            {
+                amount,
+                users = members,
+            }),
+            "totalsByUserId"
+        );
+
+    /// <summary>
+    /// Sets the specified <paramref name="total">total amount</paramref> of XP for all of the specified <paramref name="members" />.
+    /// </summary>
+    /// <param name="server">The server where the <see cref="Member">members</see> are</param>
+    /// <param name="total">The total amount of XP to set for the user</param>
+    /// <param name="members">The list of <see cref="Member">members</see> that will have their XP changed</param>
+    /// <exception cref="GuildedException" />
+    /// <exception cref="GuildedPermissionException" />
+    /// <exception cref="GuildedResourceException" />
+    /// <exception cref="GuildedAuthorizationException" />
+    /// <permission cref="Permission.ManageXp" />
+    /// <returns>The total amount of XP that the each specified <see cref="Member">member</see> has</returns>
+    public Task<IDictionary<HashId, long>> SetBulkXpAsync(HashId server, long total, params HashId[] members) =>
+        total is > Member.MaxSetXp or < Member.MinSetXp
+        ? throw new ArgumentOutOfRangeException(nameof(total), total, "Cannot set more than 1 000 000 000 and less than -1 000 000 000 XP")
+        : GetResponsePropertyAsync<IDictionary<HashId, long>>(new RestRequest($"servers/{server}/xp", Method.Put)
+            .AddJsonBody(new
+            {
+                amount = total,
+                users = members,
+            }),
+            "totalsByUserId"
         );
     #endregion
 
@@ -900,6 +951,92 @@ public abstract partial class AbstractGuildedClient
     /// <permission cref="Permission.RemoveMembers" />
     public Task RemoveMemberBanAsync(HashId server, HashId member) =>
         ExecuteRequestAsync(new RestRequest($"servers/{server}/bans/{member}", Method.Delete));
+    #endregion
+
+    #region Methods Channels
+    /// <summary>
+    /// Gets the specified <paramref name="category" />.
+    /// </summary>
+    /// <param name="server">The identifier of the <see cref="Server">server</see> where the <see cref="Category">category</see> is</param>
+    /// <param name="category">The identifier of the <see cref="Category">category</see> to get</param>
+    /// <exception cref="GuildedException" />
+    /// <exception cref="GuildedPermissionException" />
+    /// <exception cref="GuildedResourceException" />
+    /// <exception cref="GuildedRequestException" />
+    /// <exception cref="GuildedAuthorizationException" />
+    /// <returns>The <see cref="Category">category</see> that was specified in the arguments</returns>
+    public Task<Category> GetCategoryAsync(HashId server, uint category) =>
+        GetResponsePropertyAsync<Category>(new RestRequest($"servers/{server}/categories/{category}", Method.Get), "category");
+
+    /// <summary>
+    /// Creates a new channel in the specified <paramref name="server" />.
+    /// </summary>
+    /// <param name="server">The identifier of the <see cref="Server">server</see> where the <see cref="Category">category</see> will be created</param>
+    /// <param name="name">The name of the <see cref="Category">category</see> (max — <c>100</c>)</param>
+    /// <param name="group">The identifier of the group where the <see cref="ServerChannel">channel</see> will be created</param>
+    /// <exception cref="GuildedException" />
+    /// <exception cref="GuildedPermissionException" />
+    /// <exception cref="GuildedResourceException" />
+    /// <exception cref="GuildedRequestException" />
+    /// <exception cref="GuildedAuthorizationException" />
+    /// <exception cref="ArgumentNullException">The specified <paramref name="name" /> is null, empty or whitespace</exception>
+    /// <permission cref="Permission.ManageChannels" />
+    /// <returns>The <see cref="Category">category</see> that was created by the <see cref="AbstractGuildedClient">client</see></returns>
+    public Task<Category> CreateCategoryAsync(HashId server, string name, HashId? group = null)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentNullException(nameof(name));
+
+        EnforceLimit(nameof(name), name, ServerChannel.NameLimit);
+
+        return GetResponsePropertyAsync<Category>(new RestRequest($"servers/{server}/categories", Method.Post)
+            .AddJsonBody(new
+            {
+                serverId = server,
+                groupId = group,
+                name,
+            })
+        , "category");
+    }
+
+    /// <summary>
+    /// Edits the specified <paramref name="category" />.
+    /// </summary>
+    /// <param name="server">The identifier of the <see cref="Server">server</see> where the <see cref="Category">category</see> is</param>
+    /// <param name="category">The identifier of the <see cref="Category">category</see> to update</param>
+    /// <param name="name">A new name of the <see cref="Category">category</see> (max — <c>100</c>)</param>
+    /// <exception cref="GuildedException" />
+    /// <exception cref="GuildedPermissionException" />
+    /// <exception cref="GuildedResourceException" />
+    /// <exception cref="GuildedRequestException" />
+    /// <exception cref="GuildedAuthorizationException" />
+    /// <permission cref="Permission.ManageChannels" />
+    /// <returns>The <see cref="Category">category</see> that was updated by the <see cref="AbstractGuildedClient">client</see></returns>
+    public Task<Category> UpdateCategoryAsync(HashId server, uint category, string name)
+    {
+        EnforceLimit(nameof(name), name, ServerChannel.NameLimit);
+
+        return GetResponsePropertyAsync<Category>(new RestRequest($"servers/{server}/categories/{category}", Method.Patch)
+            .AddJsonBody(new
+            {
+                name,
+            })
+        , "category");
+    }
+
+    /// <summary>
+    /// Deletes the specified <paramref name="category" />.
+    /// </summary>
+    /// <param name="server">The identifier of the <see cref="Server">server</see> where the <see cref="Category">category</see> is</param>
+    /// <param name="category">The identifier of the <see cref="Category">category</see> to delete</param>
+    /// <exception cref="GuildedException" />
+    /// <exception cref="GuildedPermissionException" />
+    /// <exception cref="GuildedResourceException" />
+    /// <exception cref="GuildedRequestException" />
+    /// <exception cref="GuildedAuthorizationException" />
+    /// <permission cref="Permission.ManageChannels" />
+    public Task DeleteCategoryAsync(HashId server, uint category) =>
+        ExecuteRequestAsync(new RestRequest($"servers/{server}/categories/{category}", Method.Delete));
     #endregion
 
     #region Methods Webhooks
@@ -1064,7 +1201,7 @@ public abstract partial class AbstractGuildedClient
     }
 
     /// <summary>
-    /// Updates the specified <paramref name="channel" />.
+    /// Edits the specified <paramref name="channel" />.
     /// </summary>
     /// <param name="channel">The identifier of the <see cref="ServerChannel">channel</see> to update</param>
     /// <param name="name">A new name of the <see cref="ServerChannel">channel</see> (max — <c>100</c>)</param>
@@ -1092,7 +1229,7 @@ public abstract partial class AbstractGuildedClient
     /// <summary>
     /// Deletes the specified <paramref name="channel" />.
     /// </summary>
-    /// <param name="channel">The identifier of the channel to delete</param>
+    /// <param name="channel">The identifier of the <see cref="ServerChannel">channel</see> to delete</param>
     /// <exception cref="GuildedException" />
     /// <exception cref="GuildedPermissionException" />
     /// <exception cref="GuildedResourceException" />
