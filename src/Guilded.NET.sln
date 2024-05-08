@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guilded.Markdown", "Guilded
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guilded.Webhook", "Guilded.Webhook\Guilded.Webhook.csproj", "{8D7CEB81-C434-4F03-AD04-CAD49B48C655}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guilded.Connection", "Guilded.Connection\Guilded.Connection.csproj", "{58FFB39A-1446-4B18-B1AF-4DCA6404F47B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{8D7CEB81-C434-4F03-AD04-CAD49B48C655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D7CEB81-C434-4F03-AD04-CAD49B48C655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D7CEB81-C434-4F03-AD04-CAD49B48C655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58FFB39A-1446-4B18-B1AF-4DCA6404F47B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58FFB39A-1446-4B18-B1AF-4DCA6404F47B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58FFB39A-1446-4B18-B1AF-4DCA6404F47B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58FFB39A-1446-4B18-B1AF-4DCA6404F47B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
