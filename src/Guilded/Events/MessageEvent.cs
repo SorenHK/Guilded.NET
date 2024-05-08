@@ -151,6 +151,8 @@ public class MessageEvent : MessageEvent<Message>, IReactibleContent
     ) : base(serverId, message) { }
     #endregion
 
+#if !NETSTANDARD2_0
+
     #region Method CreateMessageAsync
     /// <inheritdoc cref="Message.CreateMessageAsync(MessageContent)" />
     public Task<Message> CreateMessageAsync(MessageContent message) =>
@@ -158,15 +160,15 @@ public class MessageEvent : MessageEvent<Message>, IReactibleContent
 
     /// <inheritdoc cref="Message.CreateMessageAsync(string, IList{Embed}, IList{Guid}, bool, bool)" />
     public Task<Message> CreateMessageAsync(string? content = null, IList<Embed>? embeds = null, IList<Guid>? replyTo = null, bool isPrivate = false, bool isSilent = false) =>
-        Message.CreateMessageAsync(content, embeds, replyTo, isPrivate, isSilent);
+        Message.CreateMessageAsync(content, embeds, replyTo, null, isPrivate, isSilent);
 
     /// <inheritdoc cref="Message.CreateMessageAsync(string, IList{Guid}, bool, bool, Embed[])" />
     public Task<Message> CreateMessageAsync(string? content = null, IList<Guid>? replyTo = null, bool isPrivate = false, bool isSilent = false, params Embed[] embeds) =>
-        Message.CreateMessageAsync(content, replyTo, isPrivate, isSilent, embeds);
+        Message.CreateMessageAsync(content, replyTo, null, isPrivate, isSilent, embeds);
 
     /// <inheritdoc cref="Message.CreateMessageAsync(string, IList{Embed}, bool, bool, Guid[])" />
     public Task<Message> CreateMessageAsync(string? content = null, IList<Embed>? embeds = null, bool isPrivate = false, bool isSilent = false, params Guid[] replyTo) =>
-        Message.CreateMessageAsync(content, embeds, replyTo, isPrivate, isSilent);
+        Message.CreateMessageAsync(content, embeds, replyTo, null, isPrivate, isSilent);
 
     /// <inheritdoc cref="Message.CreateMessageAsync(string, Embed[])" />
     public Task<Message> CreateMessageAsync(string content, params Embed[] embeds) =>
@@ -180,7 +182,7 @@ public class MessageEvent : MessageEvent<Message>, IReactibleContent
     #region Method ReplyAsync
     /// <inheritdoc cref="Message.ReplyAsync(string, IList{Embed}, bool, bool)" />
     public Task<Message> ReplyAsync(string? content = null, IList<Embed>? embeds = null, bool isPrivate = false, bool isSilent = false) =>
-        Message.ReplyAsync(content, embeds, isPrivate, isSilent);
+        Message.ReplyAsync(content, embeds, null, isPrivate, isSilent);
 
     /// <inheritdoc cref="Message.ReplyAsync(string, IList{Embed}, bool, bool)" />
     public Task<Message> ReplyAsync(string? content = null, bool isPrivate = false, bool isSilent = false, params Embed[] embeds) =>
@@ -227,4 +229,6 @@ public class MessageEvent : MessageEvent<Message>, IReactibleContent
     public Task RemoveReactionAsync(uint emote) =>
         Message.RemoveReactionAsync(emote);
     #endregion
+
+#endif
 }

@@ -61,7 +61,7 @@ public interface IChatChannel : IChannel
     /// <param name="isPrivate">Whether the mention is private</param>
     /// <param name="isSilent">Whether the mention is silent and does not ping anyone</param>
     public Task<Message> CreateMessageAsync(string? content = null, IList<Embed>? embeds = null, IList<Guid>? replyTo = null, bool isPrivate = false, bool isSilent = false) =>
-        CreateMessageAsync(new MessageContent(content, embeds, replyTo, isPrivate, isSilent));
+        CreateMessageAsync(new MessageContent(content, embeds, replyTo, null, isPrivate, isSilent));
 
     /// <inheritdoc cref="AbstractGuildedClient.CreateMessageAsync(Guid, string?, IList{Embed}?, IList{Guid}?, bool, bool)" />
     /// <param name="content">The <see cref="Message.Content">text contents</see> of the <see cref="Message">message</see> in Markdown (max — <c>4000</c>)</param>
@@ -70,7 +70,7 @@ public interface IChatChannel : IChannel
     /// <param name="isSilent">Whether the mention is silent and does not ping anyone</param>
     /// <param name="embeds">The array of all <see cref="Embed">custom embeds</see> in the <see cref="Message">message</see> (max — <c>1</c>)</param>
     public Task<Message> CreateMessageAsync(string? content = null, IList<Guid>? replyTo = null, bool isPrivate = false, bool isSilent = false, params Embed[] embeds) =>
-        CreateMessageAsync(new MessageContent(content, embeds, replyTo, isPrivate, isSilent));
+        CreateMessageAsync(new MessageContent(content, embeds, replyTo, null, isPrivate, isSilent));
 
     /// <inheritdoc cref="AbstractGuildedClient.CreateMessageAsync(Guid, string?, IList{Embed}?, IList{Guid}?, bool, bool)" />
     /// <param name="content">The <see cref="Message.Content">text contents</see> of the <see cref="Message">message</see> in Markdown (max — <c>4000</c>)</param>
@@ -79,7 +79,7 @@ public interface IChatChannel : IChannel
     /// <param name="isSilent">Whether the mention is silent and does not ping anyone</param>
     /// <param name="replyTo">The array of all <see cref="Message">messages</see> it is replying to (max — <c>5</c>)</param>
     public Task<Message> CreateMessageAsync(string? content = null, IList<Embed>? embeds = null, bool isPrivate = false, bool isSilent = false, params Guid[] replyTo) =>
-        CreateMessageAsync(new MessageContent(content, embeds, replyTo, isPrivate, isSilent));
+        CreateMessageAsync(new MessageContent(content, embeds, replyTo, null, isPrivate, isSilent));
 
     /// <inheritdoc cref="AbstractGuildedClient.CreateMessageAsync(Guid, string?, IList{Embed}?, IList{Guid}?, bool, bool)" />
     /// <param name="content">The <see cref="Message.Content">text contents</see> of the <see cref="Message">message</see> in Markdown (max — <c>4000</c>)</param>

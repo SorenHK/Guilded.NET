@@ -382,6 +382,8 @@ public class Message :
         (Content, ReplyMessageIds, HiddenUrls, Embeds, IsPrivate, IsSilent, Mentions, CreatedByWebhook, UpdatedAt, Type) = (content, replyMessageIds, hiddenLinkPreviewUrls, embeds, isPrivate, isSilent, mentions, createdByWebhookId, updatedAt, type);
     #endregion
 
+#if !NETSTANDARD2_0
+
     #region Methods CreateMessageAsync
     /// <summary>
     /// Creates a message in the parent channel (from <see cref="ChannelContent{T, S}.ChannelId" />).
@@ -591,4 +593,6 @@ public class Message :
     public Task RemoveReactionAsync(uint emote) =>
         ParentClient.RemoveMessageReactionAsync(ChannelId, Id, emote);
     #endregion
+
+#endif
 }

@@ -12,6 +12,8 @@ namespace Guilded.Markdown;
 /// </summary>
 public static class GuildedMarkdownExtensions
 {
+#if !NETSTANDARD2_0
+
     #region Methods Reactions by char
     // /// <inheritdoc cref="AbstractGuildedClient.AddReactionAsync(Guid, Guid, uint)" />
     // /// <param name="client">The <see cref="AbstractGuildedClient">client</see> to add reaction with</param>
@@ -125,4 +127,6 @@ public static class GuildedMarkdownExtensions
     public static Task RemoveReactionAsync(this CalendarEventEvent calendarEventEvent, char emote) =>
         calendarEventEvent.RemoveReactionAsync(Emotes.BySymbol[emote]);
     #endregion
+
+#endif
 }
