@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Guilded.Base.Events;
+using Guilded.Events;
 
 namespace Guilded.Commands;
 
@@ -17,7 +16,7 @@ namespace Guilded.Commands;
 /// </example>
 /// <seealso cref="CommandEvent" />
 /// <seealso cref="FailedCommandEvent" />
-public struct RootCommandEvent
+public readonly struct RootCommandEvent
 {
     #region Properties
     /// <summary>
@@ -47,13 +46,13 @@ public struct RootCommandEvent
     /// <summary>
     /// Gets the message event that invoked the command.
     /// </summary>
-    /// <value>Message event</value>
+    /// <value>The message event that invoked the command</value>
     public MessageEvent MessageEvent { get; }
 
     /// <summary>
     /// Gets any additional context that were passed manually by the bot developer (you).
     /// </summary>
-    /// <value>Any object</value>
+    /// <value>Any additional context that were passed manually by the bot developer (you)</value>
     public object? AdditionalContext { get; }
     #endregion
 

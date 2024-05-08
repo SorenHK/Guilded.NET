@@ -75,21 +75,21 @@ public readonly struct HashId : IEquatable<HashId>
 
     #region Methods
     /// <summary>
-    /// Returns the string representation of <see cref="HashId" /> instance.
+    /// Returns the <see cref="string" /> representation of <see cref="HashId">hash ID</see> instance.
     /// </summary>
     /// <remarks>
     /// <para>The raw string that makes up <see cref="HashId" /> will be returned.</para>
     /// </remarks>
-    /// <returns><see cref="HashId" /> as a <see cref="string" /></returns>
+    /// <returns>The <see cref="string" /> representation of <see cref="HashId">hash ID</see> instance</returns>
     public override string ToString() =>
         _;
 
     /// <summary>
-    /// Gets a hashcode of this object.
+    /// Gets the hashcode of the <see cref="HashId">hash ID</see>.
     /// </summary>
-    /// <returns>HashCode</returns>
+    /// <returns>The hashcode of the <see cref="HashId">hash ID</see></returns>
     public override int GetHashCode() =>
-        HashCode.Combine(_, 2);
+        _.GetHashCode();
 
     /// <summary>
     /// Returns whether this <see cref="HashId" /> instance and the <paramref name="other" /> given value are equal.
@@ -113,7 +113,7 @@ public readonly struct HashId : IEquatable<HashId>
     /// <param name="other">Another object to compare</param>
     /// <returns>Both are equal</returns>
     public override bool Equals(object? other) =>
-        other is HashId id && Equals(id);
+        other is not null && other is HashId id && Equals(id);
     #endregion
 
     #region Operators

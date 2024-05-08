@@ -1,34 +1,15 @@
 using System;
-using Guilded.Base.Servers;
 using RestSharp;
 
 namespace Guilded.Base;
 
 /// <summary>
-/// Represents an exception thrown by Guilded API when a request has invalid parameters.
+/// Represents an exception thrown by Guilded API when Guilded API is being flood by too many requests.
 /// </summary>
-/// <remarks>
-/// <para>This has these leading causes:</para>
-/// <list type="bullet">
-///     <item>
-///         <term>Invalid/bad parameters</term>
-///         <description>The parameters of given method were invalid or expired</description>
-///     </item>
-///     <item>
-///         <term>Outdated methods</term>
-///         <description>If you are using newer version of API and older incompatible methods, this can lead to an exception. This would rarely be the case, but still a possibility.</description>
-///     </item>
-///     <item>
-///         <term>Guilded.NET related issue</term>
-///         <description>This could be related to Guilded.NET itself, especially if new breaking update came and Guilded.NET hasn't changed methods yet.</description>
-///     </item>
-/// </list>
-/// </remarks>
 /// <seealso cref="GuildedException" />
 /// <seealso cref="GuildedTooManyRequestsException" />
 /// <seealso cref="GuildedPermissionException" />
 /// <seealso cref="GuildedResourceException" />
-/// <seealso cref="GuildedWebsocketException" />
 [Serializable]
 public sealed class GuildedTooManyRequestsException : GuildedException
 {
@@ -42,9 +23,9 @@ public sealed class GuildedTooManyRequestsException : GuildedException
     public TimeSpan TimeLeft { get; }
 
     /// <summary>
-    /// Gets whether <see cref="GuildedTooManyRequestsException">too many request error</see> was caused by <see cref="ServerChannel">channel's slowmode settingss</see>.
+    /// Gets whether <see cref="GuildedTooManyRequestsException">too many request error</see> was caused by <see cref="T:Guilded.Servers.ServerChannel">channel's slowmode settingss</see>.
     /// </summary>
-    /// <value><see cref="GuildedTooManyRequestsException">Error</see> comes from <see cref="ServerChannel">channel's slowmode</see></value>
+    /// <value><see cref="GuildedTooManyRequestsException">Error</see> comes from <see cref="T:Guilded.Servers.ServerChannel">channel's slowmode</see></value>
     /// <seealso cref="GuildedTooManyRequestsException" />
     /// <seealso cref="TimeLeft" />
     public bool IsFromSlowmode { get; }
@@ -67,7 +48,7 @@ public sealed class GuildedTooManyRequestsException : GuildedException
     /// </summary>
     /// <param name="message">The description of the error from Guilded API</param>
     /// <param name="retryAfter">The time to wait after another request</param>
-    /// <param name="isFromSlowmode">Whether <see cref="GuildedTooManyRequestsException">too many request error</see> was caused by <see cref="ServerChannel">channel's slowmode settingss</see></param>
+    /// <param name="isFromSlowmode">Whether <see cref="GuildedTooManyRequestsException">too many request error</see> was caused by <see cref="T:Guilded.Servers.ServerChannel">channel's slowmode settingss</see></param>
     /// <returns>New <see cref="GuildedTooManyRequestsException">bad request exception</see> instance</returns>
     /// <seealso cref="GuildedTooManyRequestsException" />
     /// <seealso cref="GuildedTooManyRequestsException()" />
@@ -82,7 +63,7 @@ public sealed class GuildedTooManyRequestsException : GuildedException
     /// <param name="message">The description of the error from Guilded API</param>
     /// <param name="response">The response that was received from Guilded API</param>
     /// <param name="retryAfter">The time to wait after another request</param>
-    /// <param name="isFromSlowmode">Whether <see cref="GuildedTooManyRequestsException">too many request error</see> was caused by <see cref="ServerChannel">channel's slowmode settingss</see></param>
+    /// <param name="isFromSlowmode">Whether <see cref="GuildedTooManyRequestsException">too many request error</see> was caused by <see cref="T:Guilded.Servers.ServerChannel">channel's slowmode settingss</see></param>
     /// <returns>New <see cref="GuildedTooManyRequestsException">bad request exception</see> instance</returns>
     /// <seealso cref="GuildedTooManyRequestsException" />
     /// <seealso cref="GuildedTooManyRequestsException()" />
