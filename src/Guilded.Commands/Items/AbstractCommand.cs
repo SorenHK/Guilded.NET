@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace Guilded.Commands.Items;
 
@@ -46,8 +47,7 @@ public interface ICommand<out TMember> where TMember : MemberInfo
     /// </summary>
     /// <param name="name">The name to check whether the command contains</param>
     /// <returns>Command has given <paramref name="name" /></returns>
-    public bool HasName(string name) =>
-        Name == name || (Aliases?.Contains(name) ?? false);
+    public bool HasName(string name);
     #endregion
 }
 
@@ -93,6 +93,10 @@ public abstract class AbstractCommand<TMember> : ICommand<TMember> where TMember
     #endregion
 
     #region Methods
+
+    public bool HasName(string name) =>
+        Name == name || (Aliases?.Contains(name) ?? false);
+
     internal static string TransformMethodName(string name)
     {
         // Trim XCommandAsync(), XCommand(), XAsync()
@@ -105,7 +109,7 @@ public abstract class AbstractCommand<TMember> : ICommand<TMember> where TMember
     {
         int suffixIndex = str.LastIndexOf(substring);
 
-        return suffixIndex > -1 ? str[..suffixIndex] : str;
+        return suffixIndex > -1 ? str.Substring(0, suffixIndex) : str;
     }
     #endregion
 }

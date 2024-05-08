@@ -288,7 +288,7 @@ public static class MarkdownBuilder
     {
         if (value is null) return builder;
 
-        string[] lines = value.Split("\n");
+        string[] lines = value.Split('\n');
 
         int i = 0;
 

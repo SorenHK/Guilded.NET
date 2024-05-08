@@ -328,7 +328,7 @@ public abstract class BaseGuildedService
             string code = obj.Value<string>("code")!,
                     errorMessage = obj.Value<string>("message")!;
 
-            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            if ((int)response.StatusCode == 429)
             {
                 HeaderParameter? retryAfterHeader = response.Headers!.FirstOrDefault(x => x.Name == "Retry-After");
                 double afterSeconds = retryAfterHeader?.Value is null ? 5 : double.Parse((string)retryAfterHeader.Value!);

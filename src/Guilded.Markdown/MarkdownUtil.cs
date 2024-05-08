@@ -526,7 +526,7 @@ public static class GuildedMarkdown
     /// <seealso cref="Paragraphs(IEnumerable{string})" />
     /// <seealso cref="Paragraphs(string[])" />
     public static string CodeBlock(IEnumerable<string> lines, string language = "") =>
-        CodeBlock(string.Join('\n', lines), language);
+        CodeBlock(string.Join("\n", lines), language);
 
     /// <summary>
     /// Returns the given code <paramref name="lines" /> formatted in a code block with the specified <paramref name="language" />
@@ -754,7 +754,7 @@ public static class GuildedMarkdown
     public static string? StripMarkdown(string? value) =>
         value is null
         ? value
-        : string.Join('\n', StripInlineMarkdown(value)!.Split('\n').Select(EscapePrefixedFormat));
+        : string.Join("\n", StripInlineMarkdown(value)!.Split('\n').Select(EscapePrefixedFormat));
 
     /// <inheritdoc cref="StripMarkdown(string)" />
     /// <param name="value">The value to remove Markdown from</param>
@@ -765,7 +765,7 @@ public static class GuildedMarkdown
     #region Methods private
     private static string ApplyToLines(string? value, Func<string, string> format) =>
         value is not null
-        ? string.Join('\n', value.Split('\n').Select(format))
+        ? string.Join("\n", value.Split('\n').Select(format))
         : string.Empty;
 
     private static string EscapePrefixedFormat(string value) =>
