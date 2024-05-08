@@ -30,6 +30,8 @@ public interface IChannel : IHasParentClient
 /// </summary>
 public interface IChatChannel : IChannel
 {
+#if !NETSTANDARD2_0
+
     /// <inheritdoc cref="AbstractGuildedClient.GetMessagesAsync(Guid, bool, uint?, DateTime?, DateTime?)" />
     /// <param name="includePrivate">Whether to get private replies or not</param>
     /// <param name="limit">The limit of how many messages to get (default — <c>50</c>, min — <c>1</c>, max — <c>100</c>)</param>
@@ -144,6 +146,8 @@ public interface IChatChannel : IChannel
     /// <param name="emote">The <see cref="Emote">emote</see> to remove</param>
     public Task RemoveReactionAsync(Guid message, Emote emote) =>
         RemoveReactionAsync(message, emote.Id);
+
+#endif
 }
 
 /// <summary>
@@ -151,6 +155,8 @@ public interface IChatChannel : IChannel
 /// </summary>
 public interface IContentChannel : IChannel, IHasParentClient
 {
+#if !NETSTANDARD2_0
+
     /// <inheritdoc cref="AbstractGuildedClient.AddReactionAsync(Guid, uint, uint)" />
     /// <param name="content">The identifier of the <see cref="ChannelContent{TId, TServer}">content</see> to add a <see cref="Reaction">reaction</see> to</param>
     /// <param name="emote">The identifier of the <see cref="Emote">emote</see> to add</param>
@@ -174,4 +180,6 @@ public interface IContentChannel : IChannel, IHasParentClient
     /// <param name="emote">The <see cref="Emote">emote</see> to remove</param>
     public Task RemoveReactionAsync(uint content, Emote emote) =>
         RemoveReactionAsync(content, emote.Id);
+
+#endif
 }

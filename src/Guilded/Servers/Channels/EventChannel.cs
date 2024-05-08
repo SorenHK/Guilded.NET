@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+
+#if !NETSTANDARD2_0
 using System.Reflection.Metadata;
+#endif
+
 using System.Threading.Tasks;
 using Guilded.Base;
 using Guilded.Client;
@@ -98,6 +102,8 @@ public class CalendarChannel : ServerChannel
         uint? categoryId = null
     ) : base(id, groupId, serverId, type, name, createdBy, createdAt, updatedAt, archivedBy, archivedAt, topic, rootId, parentId, messageId, categoryId) { }
     #endregion
+
+#if !NETSTANDARD2_0
 
     #region Methods Events
     /// <inheritdoc cref="AbstractGuildedClient.GetEventsAsync(Guid, uint?, DateTime?)" />
@@ -371,4 +377,6 @@ public class CalendarChannel : ServerChannel
     public Task RemoveRsvpAsync(uint calendarEvent, HashId user) =>
         ParentClient.RemoveEventRsvpAsync(Id, calendarEvent, user);
     #endregion
+
+#endif
 }

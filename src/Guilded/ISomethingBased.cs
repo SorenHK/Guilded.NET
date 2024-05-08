@@ -25,11 +25,15 @@ public interface IServerBased : IHasParentClient
     HashId ServerId { get; }
     #endregion
 
+#if !NETSTANDARD2_0
+
     #region Methods
     /// <inheritdoc cref="AbstractGuildedClient.GetServerAsync(HashId)" />
     public Task<Server> GetServerAsync() =>
         ParentClient.GetServerAsync(ServerId);
     #endregion
+
+#endif
 }
 
 /// <summary>
@@ -48,11 +52,15 @@ public interface IGlobalContent : IHasParentClient
     HashId? ServerId { get; }
     #endregion
 
+#if !NETSTANDARD2_0
+
     #region Methods
     /// <inheritdoc cref="AbstractGuildedClient.GetServerAsync(HashId)" />
     public async Task<Server?> GetServerAsync() =>
         ServerId is not null ? await ParentClient.GetServerAsync((HashId)ServerId) : null;
     #endregion
+
+#endif
 }
 
 /// <summary>
@@ -71,6 +79,8 @@ public interface IChannelBased : IHasParentClient
     Guid ChannelId { get; }
     #endregion
 
+#if !NETSTANDARD2_0
+
     #region Methods
     /// <inheritdoc cref="AbstractGuildedClient.GetChannelAsync(Guid)" />
     public Task<ServerChannel> GetChannelAsync() =>
@@ -84,4 +94,6 @@ public interface IChannelBased : IHasParentClient
     public Task DeleteChannelAsync() =>
         ParentClient.DeleteChannelAsync(ChannelId);
     #endregion
+
+#endif
 }

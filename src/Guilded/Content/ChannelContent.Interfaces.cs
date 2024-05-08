@@ -15,6 +15,8 @@ namespace Guilded.Content;
 /// <seealso cref="IWebhookCreated" />
 public interface IReactibleContent
 {
+#if !NETSTANDARD2_0
+
     #region Methods
     /// <inheritdoc cref="AbstractGuildedClient.AddReactionAsync(Guid, uint, uint)" />
     /// <param name="emote">The identifier of the <see cref="Emote">emote</see> to add</param>
@@ -32,6 +34,8 @@ public interface IReactibleContent
     /// <param name="emote">The <see cref="Emote">emote</see> to remove</param>
     public Task RemoveReactionAsync(Emote emote) => RemoveReactionAsync(emote.Id);
     #endregion
+
+#endif
 }
 
 /// <summary>

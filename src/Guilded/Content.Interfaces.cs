@@ -143,5 +143,5 @@ public interface IArchivableContent
     /// <seealso cref="ArchivedAt" />
     /// <seealso cref="ArchivedBy" />
     [MemberNotNullWhen(true, nameof(ArchivedAt), nameof(ArchivedBy))]
-    public bool IsArchived => ArchivedAt is not null;
+    public bool IsArchived { get; }
 }
