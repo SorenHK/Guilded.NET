@@ -1195,7 +1195,7 @@ public abstract partial class AbstractGuildedClient
                 name,
                 type,
                 topic,
-                isPublic
+                visibility = isPublic.HasValue ? isPublic.Value ? "public" : "private" : null,
             })
         , "channel");
     }
