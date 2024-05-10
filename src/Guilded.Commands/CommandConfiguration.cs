@@ -156,7 +156,7 @@ public record CommandConfiguration
 
                     Match match = attr.Regex.Match(y);
                     z = match;
-                    y = y[match.Length..].TrimStart(rootInvokation.Configuration.Separators);
+                    y = y.Substring(match.Length).TrimStart(rootInvokation.Configuration.Separators);
 
                     return match.Success;
                 }
@@ -243,16 +243,16 @@ public record CommandConfiguration
         value = null;
 
         // It's a mention
-        if (!arguments.StartsWith('@'))
+        if (!arguments.StartsWith("@"))
             return false;
 
-        string afterAmpersat = arguments[1..];
+        string afterAmpersat = arguments.Substring(1);
         Member? knownMember = rootInvokation.KnownMembers.FirstOrDefault(x => ArgumentContainsName(afterAmpersat, x.DisplayName, rootInvokation.Configuration.Separators));
 
         // To use up the argument and not leave Guilded.NET confused
         if (knownMember is not null)
         {
-            arguments = arguments[(1 + knownMember.DisplayName.Length)..].TrimStart(rootInvokation.Configuration.Separators);
+            arguments = arguments.Substring(1 + knownMember.DisplayName.Length).TrimStart(rootInvokation.Configuration.Separators);
         }
 
         value = knownMember!;
@@ -275,12 +275,12 @@ public record CommandConfiguration
         if (!arguments.StartsWith(prefix))
             return false;
 
-        string afterAmpersat = arguments[1..];
+        string afterAmpersat = arguments.Substring(1);
         T? known = knownList.FirstOrDefault(x => ArgumentContainsName(afterAmpersat, x.Name, config.Separators));
 
         // To use up the argument and not leave Guilded.NET confused
         if (known is not null)
-            arguments = arguments[(1 + known.Name.Length)..].TrimStart(config.Separators);
+            arguments = arguments.Substring(1 + known.Name.Length).TrimStart(config.Separators);
 
         value = known!;
 
