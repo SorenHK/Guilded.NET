@@ -71,11 +71,20 @@ public class Member : MemberSummary<User>
 
     /// <inheritdoc cref="User.Banner" />
     public Uri? Banner => User.Banner;
+
+    /// <summary>
+    /// Gets the <see cref="Nickname">nickname</see> or the <see cref="MemberSummary{T}.Name">name</see> of the <see cref="Member">member</see>.
+    /// </summary>
+    /// <value>The <see cref="Nickname">nickname</see> or the <see cref="MemberSummary{T}.Name">name</see> of the <see cref="Member">member</see></value>
+    /// <seealso cref="Member" />
+    /// <seealso cref="Nickname" />
+    /// <seealso cref="MemberSummary{T}.Name" />
+    public string DisplayName => Nickname ?? Name;
     #endregion
 
     #region Constructors
     /// <summary>
-    /// Initializes a new instance of <see cref="Member" />f rom the specified JSON properties.
+    /// Initializes a new instance of <see cref="Member" /> from the specified JSON properties.
     /// </summary>
     /// <param name="user">The <see cref="User">user</see> who is a <see cref="Member">member</see> of the <see cref="Server">server</see></param>
     /// <param name="roleIds">The list of roles that the <see cref="Member">member</see> holds</param>

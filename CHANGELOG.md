@@ -1,3 +1,24 @@
+# v1.7.1
+
+-   Fixed some bugs to how new command stuff are handled due to mention support
+-   Fixed errors not being thrown when command itself throws an error. Now it can be caught in `CommandModule`.
+-   Added `Permission.RemoveVoiceGroupMembers`
+
+# v1.7.0
+
+-   Added the ability to use `Member`, `Role` and `ServerChannel`, as well as being able to parse through mentions
+-   Added `member.GetPermissionsAsync()` method
+-   Added message threading
+-   Added supports for categories
+-   Added all of the message information on deleted messages
+-   Added support for `priority` in role updates
+-   Added support for `hiddenUrls`/`HiddenUrls` in messages, message creations, message updates
+-   Added support for category and channel user/role permissions (events and CRUD)
+-   Renamed `role.Position` to `role.Priority`
+-   Fixed `role.Position` / `role.Priority` being `uint` (it's now `int`)
+-   Fixed issue where role colours had issues deserializing
+-   Fixed `Role.BotUserId` being GUID instead of HashId
+
 # v1.6.0
 
 -   Added the ability to create threads through `client.CreateChannelAsync` or `message.CreateThreadAsync`. Thread creation in `ServerChannel`/`ChatChannel`/`VoiceChannel`/`StreamChannel` is still missing

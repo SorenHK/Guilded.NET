@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Guilded.Base;
 using Guilded.Client;
 using Guilded.Events;
+using Guilded.Permissions;
 using Guilded.Users;
 using Newtonsoft.Json;
 
@@ -18,7 +19,7 @@ namespace Guilded.Servers;
 /// <seealso cref="MemberBan" />
 /// <seealso cref="UserSummary" />
 /// <seealso cref="Webhook" />
-public class MemberSummary<T> : IHasParentClient, IUser, IServerBased where T : UserSummary
+public class MemberSummary<T> : IHasParentClient, IUser, IServerBased, IModelHasName where T : UserSummary
 {
     #region Properties
     /// <summary>

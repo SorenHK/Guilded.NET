@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using Guilded.Base;
 using Guilded.Client;
+using Guilded.Permissions;
 using Guilded.Servers;
 using Newtonsoft.Json;
 
@@ -22,19 +23,25 @@ public class RoleEvent : IModelHasId<uint>, ICreationDated, IUpdatableContent, I
     /// Gets the <see cref="Servers.Role">role</see> received from the event.
     /// </summary>
     /// <value>The <see cref="Servers.Role">role</see> received from the event</value>
-    /// <seealso cref="GroupEvent" />
+    /// <seealso cref="RoleEvent" />
     /// <seealso cref="Name" />
     /// <seealso cref="Icon" />
     /// <seealso cref="ServerId" />
     public Role Role { get; }
+
+    /// <summary>
+    /// Gets the identifier of the <see cref="Servers.Server">server</see> where the event occurred.
+    /// </summary>
+    /// <value>The identifier of the <see cref="Servers.Server">server</see> where the event occurred</value>
+    /// <seealso cref="RoleEvent" />
+    /// <seealso cref="Role" />
+    /// <seealso cref="Id" />
+    public HashId ServerId { get; }
     #endregion
 
     #region Properties Additional
     /// <inheritdoc cref="Group.Id" />
     public uint Id => Role.Id;
-
-    /// <inheritdoc />
-    public HashId ServerId { get; }
 
     /// <inheritdoc cref="Role.BotUserId" />
     public HashId? BotUserId => Role.BotUserId;
@@ -46,7 +53,11 @@ public class RoleEvent : IModelHasId<uint>, ICreationDated, IUpdatableContent, I
     public Uri? Icon => Role.Icon;
 
     /// <inheritdoc cref="Role.Position" />
-    public uint Position => Role.Position;
+    [Obsolete($"Use {nameof(Priority)} instead")]
+    public int Position => Role.Position;
+
+    /// <inheritdoc cref="Role.Priority" />
+    public int Priority => Role.Priority;
 
     /// <inheritdoc cref="Role.Colors" />
     public IList<Color>? Colors => Role.Colors;
@@ -107,25 +118,27 @@ public class RoleEvent : IModelHasId<uint>, ICreationDated, IUpdatableContent, I
 
 
     #region Methods
-    /// <inheritdoc cref="AbstractGuildedClient.UpdateRoleAsync(HashId, uint, string?, bool?, bool?, bool?, IList{uint}?, IList{Permission}?)" />
+    /// <inheritdoc cref="AbstractGuildedClient.UpdateRoleAsync(HashId, uint, string?, bool?, bool?, bool?, IList{uint}?, IList{Permission}?, int?)" />
     /// <param name="name">The new name of the <see cref="Role">role</see></param>
     /// <param name="isDisplayedSeparately">Whether the <see cref="Role">role</see> displays its <see cref="Member">members</see> separately from others</param>
     /// <param name="isSelfAssignable">Whether <see cref="Member">members</see> are allowed to assign themselves the <see cref="Role">role</see></param>
     /// <param name="isMentionable">Whether the <see cref="Role">role</see> can be mentioned and its <see cref="Member">members</see> get pinged</param>
     /// <param name="colors">The new displayed colours of the <see cref="Role">role</see></param>
     /// <param name="permissions">The new <see cref="Permission">permissions</see> of the <see cref="Role">role</see></param>
-    public Task<Role> UpdateAsync(string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<uint>? colors = null, IList<Permission>? permissions = null) =>
-        Role.UpdateAsync(name, isDisplayedSeparately, isSelfAssignable, isMentionable, colors, permissions);
+    /// <param name="priority">The position of the <see cref="Role">role</see> in the <see cref="Server">server's</see> role list</param>
+    public Task<Role> UpdateAsync(string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<uint>? colors = null, IList<Permission>? permissions = null, int? priority = null) =>
+        Role.UpdateAsync(name, isDisplayedSeparately, isSelfAssignable, isMentionable, colors, permissions, priority);
 
-    /// <inheritdoc cref="AbstractGuildedClient.UpdateRoleAsync(HashId, uint, string?, bool?, bool?, bool?, IList{uint}?, IList{Permission}?)" />
+    /// <inheritdoc cref="AbstractGuildedClient.UpdateRoleAsync(HashId, uint, string?, bool?, bool?, bool?, IList{uint}?, IList{Permission}?, int?)" />
     /// <param name="name">The new name of the <see cref="Role">role</see></param>
     /// <param name="isDisplayedSeparately">Whether the <see cref="Role">role</see> displays its <see cref="Member">members</see> separately from others</param>
     /// <param name="isSelfAssignable">Whether <see cref="Member">members</see> are allowed to assign themselves the <see cref="Role">role</see></param>
     /// <param name="isMentionable">Whether the <see cref="Role">role</see> can be mentioned and its <see cref="Member">members</see> get pinged</param>
     /// <param name="colors">The new displayed colours of the <see cref="Role">role</see></param>
     /// <param name="permissions">The new <see cref="Permission">permissions</see> of the <see cref="Role">role</see></param>
-    public Task<Role> UpdateAsync(string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<Color>? colors = null, IList<Permission>? permissions = null) =>
-        Role.UpdateAsync(name, isDisplayedSeparately, isSelfAssignable, isMentionable, colors, permissions);
+    /// <param name="priority">The position of the <see cref="Role">role</see> in the <see cref="Server">server's</see> role list</param>
+    public Task<Role> UpdateAsync(string? name = null, bool? isDisplayedSeparately = null, bool? isSelfAssignable = null, bool? isMentionable = null, IList<Color>? colors = null, IList<Permission>? permissions = null, int? priority = null) =>
+        Role.UpdateAsync(name, isDisplayedSeparately, isSelfAssignable, isMentionable, colors, permissions, priority);
 
     /// <inheritdoc cref="AbstractGuildedClient.DeleteRoleAsync(HashId, uint)" />
     public Task DeleteAsync() =>

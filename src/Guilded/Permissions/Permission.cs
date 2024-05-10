@@ -2,17 +2,26 @@ using System.Runtime.Serialization;
 using Guilded.Client;
 using Guilded.Content;
 using Guilded.Users;
+using Guilded.Servers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Guilded.Servers;
+namespace Guilded.Permissions;
 
 /// <summary>
-/// Represents <see cref="Member">member</see> or <see cref="Role">role</see> permissions.
+/// Represents what a <see cref="Member">member</see> or a <see cref="Role">role</see> is capable of doing in the <see cref="Server">server</see>.
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
 public enum Permission
 {
+    #region Properties API
+    /// <summary>
+    /// Allows you to receive more than <see cref="AbstractGuildedClient.MessageCreated">command message creation events</see>.
+    /// </summary>
+    [EnumMember(Value = "CanReceiveAllSocketEvents")]
+    ReceiveSocketEvents,
+    #endregion
+
     #region Properties General
     /// <summary>
     /// Allows you to update the <see cref="Server">server's</see> settings.
@@ -323,6 +332,12 @@ public enum Permission
     /// </summary>
     [EnumMember(Value = "CanAssignVoiceGroup")]
     ManageVoiceGroupMembers,
+
+    /// <summary>
+    /// Allows you to remove <see cref="Member">members</see> from voice rooms.
+    /// </summary>
+    [EnumMember(Value = "CanDisconnectUsers")]
+    RemoveVoiceGroupMembers,
 
     /// <summary>
     /// Allows you to broadcast your voice to voice rooms lower in the hierarchy when speaking in <see cref="VoiceChannel">voice chat</see>.
